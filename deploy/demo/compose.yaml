@@ -1,0 +1,15 @@
+services:
+  gateway:
+    image: jackey-newapi:4749572-amd64
+    container_name: jackey-newapi-demo
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+    env_file: demo.env
+    volumes:
+      - ./data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
