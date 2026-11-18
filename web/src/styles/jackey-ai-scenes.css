@@ -1,0 +1,56 @@
+.ai-nebula-scene {
+  --nebula-star: #0d9488;
+  --nebula-star-accent: #6366b8;
+  --nebula-mesh: #0f766e;
+  --nebula-mesh-width: 0.85;
+  --nebula-mesh-opacity: 0.3;
+  --nebula-orbit: #0d9488;
+  --nebula-orbit-primary-opacity: 0.48;
+  --nebula-orbit-secondary-opacity: 0.32;
+  --nebula-light: #0f766e;
+}
+.dark .ai-nebula-scene {
+  --nebula-star: #6ee7d1;
+  --nebula-star-accent: #a5b4fc;
+  --nebula-mesh: #33baa9;
+  --nebula-mesh-width: 0.6;
+  --nebula-mesh-opacity: 0.15;
+  --nebula-orbit: #6ee7d1;
+  --nebula-orbit-primary-opacity: 0.2;
+  --nebula-orbit-secondary-opacity: 0.12;
+  --nebula-light: #83ecd9;
+}
+.ai-scene-cloud {
+  transform-origin: 300px 260px;
+  animation: ai-orbit 100s linear infinite;
+}
+.ai-brand-orbit {
+  animation: ai-orbit 120s linear infinite;
+}
+.ai-brand-upright {
+  animation: ai-orbit 120s linear infinite reverse;
+}
+.ai-brand-symbol {
+  filter: drop-shadow(0 0 12px rgb(45 212 191 / 12%));
+}
+.ai-nebula-light-orbit {
+  animation: ai-nebula-light 14s linear infinite;
+}
+@keyframes ai-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ai-nebula-light {
+  to {
+    stroke-dashoffset: -526;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-scene-cloud,
+  .ai-brand-orbit,
+  .ai-brand-upright,
+  .ai-nebula-light-orbit {
+    animation: none;
+  }
+}

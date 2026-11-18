@@ -43,6 +43,9 @@ function ThemeControls() {
   return (
     <>
       <output aria-label='Theme mode'>{theme.theme}</output>
+      <button type='button' onClick={() => theme.setTheme('light')}>
+        Light theme
+      </button>
       <button type='button' onClick={() => customization.setFont('sans')}>
         Sans font
       </button>
@@ -113,6 +116,24 @@ afterEach(() => {
 })
 
 describe('theme preference persistence', () => {
+  it('defaults to dark and preserves a manual light selection after remounting', async () => {
+    const user = userEvent.setup()
+    const first = render(<ThemeFixture />)
+    expect(document.documentElement).toHaveClass('dark')
+    await user.click(screen.getByRole('button', { name: 'Light theme' }))
+    first.unmount()
+    render(<ThemeFixture />)
+    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('light')
+    expect(document.documentElement).toHaveClass('light')
+  })
+
+  it('honors an explicitly saved system theme', () => {
+    localStorage.setItem('newapi:theme:v1:mode', 'system')
+    render(<ThemeFixture />)
+    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('system')
+    expect(document.documentElement).toHaveClass('light')
+  })
+
   it('starts with defaults when only shared legacy theme cookies exist', () => {
     document.cookie = 'theme_preset=ocean-breeze; path=/'
     document.cookie = 'vite-ui-theme=dark; path=/'
@@ -123,8 +144,8 @@ describe('theme preference persistence', () => {
 
     render(<ThemeFixture />)
 
-    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('system')
-    expect(document.documentElement).toHaveClass('light')
+    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('dark')
+    expect(document.documentElement).toHaveClass('dark')
     expect(document.body).not.toHaveAttribute('data-theme-preset')
     expect(document.body).toHaveAttribute('data-theme-font', 'system')
     expect(document.body).not.toHaveAttribute('data-theme-radius')
@@ -169,8 +190,8 @@ describe('theme preference persistence', () => {
     first.unmount()
     render(<ThemeFixture />)
 
-    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('system')
-    expect(document.documentElement).toHaveClass('light')
+    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('dark')
+    expect(document.documentElement).toHaveClass('dark')
     expect(document.body).not.toHaveAttribute('data-theme-preset')
     expect(document.body).toHaveAttribute('data-theme-font', 'system')
     expect(document.body).not.toHaveAttribute('data-theme-radius')
@@ -192,7 +213,7 @@ describe('theme preference persistence', () => {
 
       render(<ThemeFixture />)
 
-      expect(screen.getByLabelText('Theme mode')).toHaveTextContent('system')
+      expect(screen.getByLabelText('Theme mode')).toHaveTextContent('dark')
       expect(document.body).not.toHaveAttribute('data-theme-preset')
       expect(document.body).toHaveAttribute('data-theme-font', 'system')
       expect(document.body).not.toHaveAttribute('data-theme-radius')
@@ -208,7 +229,7 @@ describe('theme preference persistence', () => {
 
     render(<ThemeFixture />)
 
-    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('system')
+    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('dark')
     expect(document.body).not.toHaveAttribute('data-theme-preset')
   })
 
@@ -229,7 +250,7 @@ describe('theme preference persistence', () => {
 
     await user.click(screen.getByRole('button', { name: 'Reset' }))
 
-    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('system')
+    expect(screen.getByLabelText('Theme mode')).toHaveTextContent('dark')
     expect(document.body).not.toHaveAttribute('data-theme-preset')
   })
 

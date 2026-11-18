@@ -17,9 +17,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 import { Link } from '@tanstack/react-router'
+import { ArrowUpRight, Mail } from 'lucide-react'
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CopyButton } from '@/components/copy-button'
 import { useStatus } from '@/hooks/use-status'
 import { useSystemConfig } from '@/hooks/use-system-config'
 import { cn } from '@/lib/utils'
@@ -76,9 +78,7 @@ function FooterLinkItem(props: { link: FooterLink }) {
   )
 }
 
-// Renders User Agreement / Privacy Policy links inline with the parent's
-// copyright row when either is configured in System Settings → Site. Emits
-// fragmented siblings so the parent flex container's gap controls spacing.
+// Keep the privacy entry visible while its document is being prepared.
 function LegalLinks(props: { leadingSeparator?: boolean }) {
   const { t } = useTranslation()
   const { status } = useStatus()
@@ -90,13 +90,11 @@ function LegalLinks(props: { leadingSeparator?: boolean }) {
       href: '/user-agreement',
     })
   }
-  if (status?.privacy_policy_enabled) {
-    items.push({
-      key: 'privacy-policy',
-      label: t('Privacy Policy'),
-      href: '/privacy-policy',
-    })
-  }
+  items.push({
+    key: 'privacy-policy',
+    label: t('Privacy Policy'),
+    href: '/privacy-policy',
+  })
   if (items.length === 0) {
     return null
   }
@@ -237,7 +235,8 @@ export function Footer(props: FooterProps) {
               dangerouslySetInnerHTML={{ __html: footerHtml }}
             />
             <div className='border-border/60 text-muted-foreground/45 flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t pt-4 text-xs sm:w-auto sm:justify-end sm:border-t-0 sm:border-l sm:pt-0 sm:pl-5'>
-              <LegalLinks />
+              <Link to='/open-source'>{t('Open source notice')}</Link>
+              <LegalLinks leadingSeparator />
               <ProjectAttribution currentYear={currentYear} inline />
             </div>
           </div>
@@ -251,7 +250,7 @@ export function Footer(props: FooterProps) {
       className={cn('border-border/40 relative z-10 border-t', props.className)}
     >
       <div className='mx-auto max-w-6xl px-6 py-12 md:py-16'>
-        <div className='flex flex-col justify-between gap-10 md:flex-row md:gap-16'>
+        <div className='flex flex-col justify-between gap-6 md:flex-row md:items-center md:gap-16'>
           {/* Brand column */}
           <div className='shrink-0'>
             <Link to='/' className='group flex items-center gap-2.5'>
@@ -264,22 +263,51 @@ export function Footer(props: FooterProps) {
                 {displayName}
               </span>
             </Link>
-            <p className='text-muted-foreground/60 mt-3 max-w-[200px] text-xs leading-relaxed'>
-              {t('Powerful API Management Platform')}
-            </p>
+          </div>
+
+          <div className='flex min-w-0 flex-col justify-center gap-2'>
+            <span className='text-muted-foreground text-xs'>
+              {t('Contact us')}
+            </span>
+            <div className='flex items-center gap-2 sm:gap-4'>
+              <a
+                href='mailto:howard.lyh@outlook.com?subject=JacKey%20Inquiry'
+                className='group flex w-fit max-w-full items-center gap-3 text-base font-medium transition-colors hover:text-teal-600 sm:text-xl dark:hover:text-teal-400'
+              >
+                <Mail
+                  className='size-5 shrink-0 text-teal-600 dark:text-teal-400'
+                  aria-hidden='true'
+                />
+                <span className='break-all'>howard.lyh@outlook.com</span>
+                <ArrowUpRight
+                  className='size-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                  aria-hidden='true'
+                />
+              </a>
+              <CopyButton
+                value='howard.lyh@outlook.com'
+                size='sm'
+                className='text-muted-foreground w-fit'
+                aria-label={t('Copy email address')}
+              >
+                <span className='hidden sm:inline'>
+                  {t('Copy email address')}
+                </span>
+              </CopyButton>
+            </div>
           </div>
 
           {/* Links columns */}
           {isDemoSiteMode && (
             <div className='grid grid-cols-3 gap-8 md:gap-16'>
-              {displayColumns.map((column, index) => (
-                <div key={index}>
+              {displayColumns.map((column) => (
+                <div key={column.title}>
                   <p className='text-muted-foreground/50 mb-3 text-xs font-medium tracking-wider uppercase'>
                     {t(column.title)}
                   </p>
                   <ul className='space-y-2.5'>
-                    {column.links.map((link, linkIndex) => (
-                      <li key={linkIndex}>
+                    {column.links.map((link) => (
+                      <li key={link.href}>
                         <FooterLinkItem link={link} />
                       </li>
                     ))}
@@ -294,10 +322,12 @@ export function Footer(props: FooterProps) {
             attribution on the right; wraps on narrow screens. */}
         <div className='border-border/30 mt-12 flex flex-col items-center justify-between gap-x-3 gap-y-2 border-t pt-6 sm:flex-row'>
           <div className='text-muted-foreground/40 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs sm:justify-start'>
-            <span>
-              &copy; {currentYear} {displayName}.{' '}
-              {props.copyright ?? t('footer.defaultCopyright')}
-            </span>
+            <Link
+              to='/open-source'
+              className='hover:text-foreground transition-colors'
+            >
+              {t('Open source notice')}
+            </Link>
             <LegalLinks leadingSeparator />
           </div>
           <ProjectAttribution currentYear={currentYear} />
