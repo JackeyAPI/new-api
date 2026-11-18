@@ -1,0 +1,76 @@
+name: jackey-newapi-local
+services:
+  gateway:
+    image: jackey-newapi:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      SQL_DSN: postgresql://newapi:${POSTGRES_PASSWORD:?Run init-local.sh}@postgres:5432/newapi
+      REDIS_CONN_STRING: redis://:${REDIS_PASSWORD:?Run init-local.sh}@redis:6379
+      SESSION_SECRET: ${SESSION_SECRET:?Run init-local.sh}
+      SESSION_COOKIE_SECURE: "false"
+      TZ: Asia/Shanghai
+      DEFAULT_LANGUAGE: zh-CN
+      BATCH_UPDATE_ENABLED: "true"
+      NODE_NAME: local-dev
+    volumes:
+      - gateway_data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+  postgres:
+    image: postgres:16.6-alpine
+    environment:
+      POSTGRES_USER: newapi
+      POSTGRES_DB: newapi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run init-local.sh}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U newapi -d newapi"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:7.4.1-alpine
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Run init-local.sh}
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  web:
+    profiles: [dev]
+    image: oven/bun:1.4.4
+    working_dir: /workspace/web
+    ports:
+      - "127.0.0.1:5173:5173"
+    environment:
+      VITE_REACT_APP_SERVER_URL: http://gateway:3000
+    volumes:
+      - .:/workspace
+      - web_modules:/workspace/web/node_modules
+    command: ["sh", "-c", "bun install --frozen-lockfile && bun run dev --port 5173"]
+    depends_on:
+      gateway:
+        condition: service_healthy
+volumes:
+  gateway_data:
+  postgres_data:
+  redis_data:
+  web_modules:
