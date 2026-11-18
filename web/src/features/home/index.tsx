@@ -26,7 +26,7 @@ import { useTheme } from '@/context/theme-provider'
 import { isLikelyHtml } from '@/lib/content-format'
 import { useAuthStore } from '@/stores/auth-store'
 
-import { CTA, Hero, Stats } from './components'
+import { Hero, Stats } from './components'
 import { useHomePageContent } from './hooks'
 
 export function Home() {
@@ -124,7 +124,6 @@ export function Home() {
     <PublicLayout showMainContainer={false}>
       <Hero isAuthenticated={isAuthenticated} />
       <Stats />
-      <CTA isAuthenticated={isAuthenticated} />
       <Footer />
     </PublicLayout>
   )
