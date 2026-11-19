@@ -322,6 +322,10 @@ export function Footer(props: FooterProps) {
             attribution on the right; wraps on narrow screens. */}
         <div className='border-border/30 mt-12 flex flex-col items-center justify-between gap-x-3 gap-y-2 border-t pt-6 sm:flex-row'>
           <div className='text-muted-foreground/40 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs sm:justify-start'>
+            <span>&copy; {currentYear} JacKey</span>
+            <span aria-hidden='true' className='text-muted-foreground/30'>
+              ·
+            </span>
             <Link
               to='/open-source'
               className='hover:text-foreground transition-colors'
