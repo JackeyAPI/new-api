@@ -16,74 +16,79 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { Settings, Zap, BarChart3 } from 'lucide-react'
+import { BarChart3, Settings, Zap } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { AnimateInView } from '@/components/animate-in-view'
+import { HeroTerminalDemo } from '../hero-terminal-demo'
 
 export function HowItWorks() {
   const { t } = useTranslation()
-
   const steps = [
     {
-      num: '1',
+      id: 'configure',
+      icon: Settings,
       title: t('Configure'),
-      desc: t(
+      description: t(
         'Add your API keys, set up channels and configure access permissions'
       ),
-      icon: <Settings className='size-6' strokeWidth={1.5} />,
     },
     {
-      num: '2',
+      id: 'connect',
+      icon: Zap,
       title: t('Connect'),
-      desc: t(
+      description: t(
         'Connect through OpenAI, Claude, Gemini, and other compatible API routes'
       ),
-      icon: <Zap className='size-6' strokeWidth={1.5} />,
     },
     {
-      num: '3',
+      id: 'monitor',
+      icon: BarChart3,
       title: t('Monitor'),
-      desc: t('Track usage, costs and performance with real-time analytics'),
-      icon: <BarChart3 className='size-6' strokeWidth={1.5} />,
+      description: t(
+        'Track usage, costs and performance with real-time analytics'
+      ),
     },
   ]
 
   return (
-    <section className='border-border/40 relative z-10 border-t px-6 py-24 md:py-32'>
-      <div className='mx-auto max-w-6xl'>
-        <AnimateInView className='mb-16 text-center md:mb-20'>
-          <p className='text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase'>
-            {t('How It Works')}
-          </p>
-          <h2 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            {t('Three steps to get started')}
+    <section
+      aria-labelledby='quick-start-title'
+      className='border-border/40 border-t px-6 py-12 md:py-16'
+    >
+      <div className='mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16'>
+        <div>
+          <h2
+            id='quick-start-title'
+            className='text-2xl font-semibold tracking-tight md:text-3xl'
+          >
+            {t('Quick Start')}
           </h2>
-        </AnimateInView>
-
-        <div className='grid gap-8 md:grid-cols-3 md:gap-12'>
-          {steps.map((step, i) => (
-            <AnimateInView
-              key={step.num}
-              delay={i * 150}
-              animation='fade-up'
-              className='relative flex flex-col items-center text-center'
-            >
-              <div className='relative mb-6'>
-                <div className='text-muted-foreground border-border/50 bg-muted/30 flex size-16 items-center justify-center rounded-2xl border transition-colors'>
-                  {step.icon}
+          <ol className='mt-6 space-y-3'>
+            {steps.map((step, index) => (
+              <li
+                key={step.id}
+                className='border-border/60 bg-muted/20 flex min-h-24 items-center gap-4 rounded-xl border px-4 py-4 md:min-h-28 md:px-5'
+              >
+                <div
+                  aria-hidden='true'
+                  className='relative flex size-12 shrink-0 items-center justify-center rounded-xl border border-teal-600/25 bg-teal-500/10 text-teal-700 dark:text-teal-300'
+                >
+                  <step.icon className='size-6' strokeWidth={1.5} />
+                  <span className='bg-background border-border absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full border text-[10px] font-semibold'>
+                    {index + 1}
+                  </span>
                 </div>
-                <div className='bg-foreground text-background absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full text-xs font-bold'>
-                  {step.num}
+                <div>
+                  <h3 className='text-base font-semibold'>{step.title}</h3>
+                  <p className='text-muted-foreground mt-1 text-sm leading-relaxed'>
+                    {step.description}
+                  </p>
                 </div>
-              </div>
-              <h3 className='mb-2 text-base font-semibold'>{step.title}</h3>
-              <p className='text-muted-foreground max-w-[240px] text-sm leading-relaxed'>
-                {step.desc}
-              </p>
-            </AnimateInView>
-          ))}
+              </li>
+            ))}
+          </ol>
         </div>
+        <HeroTerminalDemo />
       </div>
     </section>
   )
