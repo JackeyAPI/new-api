@@ -2,7 +2,7 @@
 
 当前部署：阿里云 Linux x86_64，Docker + Docker Compose。
 服务器目录：`/opt/jackey-newapi`；访问端口：80。
-镜像：`jackey-newapi:5859242-amd64`，源码提交：`5859242`。
+镜像：`jackey-newapi:35ae042-amd64`，源码提交：`35ae042`。
 
 仅用于功能演示：SQLite 数据持久化到 `./data`，未接入真实模型。
 正式流量应另行配置 PostgreSQL、Redis、HTTPS、备份与监控。
