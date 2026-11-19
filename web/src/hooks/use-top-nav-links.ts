@@ -40,8 +40,7 @@ export type TopNavLink = {
  *   console: true,
  *   pricing: { enabled: true, requireAuth: false },
  *   rankings: { enabled: true, requireAuth: false },
- *   docs: true,
- *   about: true
+ *   docs: true
  * }
  */
 export function useTopNavLinks(): TopNavLink[] {
@@ -94,11 +93,6 @@ export function useTopNavLinks(): TopNavLink[] {
       href: docsLink,
       external: /^https?:\/\//i.test(docsLink),
     })
-  }
-
-  // About
-  if (modules?.about !== false) {
-    links.push({ title: t('About'), href: '/about' })
   }
 
   return links
