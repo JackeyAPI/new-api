@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { useStatus } from '@/hooks/use-status'
+import { resolveDocsLink } from '@/lib/constants'
 
 import { BrandVisualShowcase } from '../brand-visual-showcase'
 
@@ -33,11 +34,10 @@ interface HeroProps {
 export function Hero(props: HeroProps) {
   const { t } = useTranslation()
   const { status } = useStatus()
-  const docsUrl =
-    (status?.docs_link as string | undefined) || 'https://docs.newapi.pro'
+  const docsUrl = resolveDocsLink(status?.docs_link as string | undefined)
 
   const renderDocsButton = () => {
-    const isExternal = docsUrl.startsWith('http')
+    const isExternal = /^https?:\/\//i.test(docsUrl)
     if (isExternal) {
       return (
         <Button

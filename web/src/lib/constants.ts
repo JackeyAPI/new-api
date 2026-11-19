@@ -30,3 +30,11 @@ export const STORAGE_KEYS = {
   LOGO: 'logo',
   FOOTER_HTML: 'footer_html',
 } as const
+
+export function resolveDocsLink(configured: string | undefined): string {
+  const url = configured?.trim()
+  if (!url || url.replace(/\/+$/, '') === 'https://docs.newapi.pro') {
+    return '/docs'
+  }
+  return url
+}
