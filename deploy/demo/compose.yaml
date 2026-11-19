@@ -1,6 +1,6 @@
 services:
   gateway:
-    image: jackey-newapi:35ae042-amd64
+    image: jackey-newapi:004eeb1-amd64
     container_name: jackey-newapi-demo
     restart: unless-stopped
     ports:
